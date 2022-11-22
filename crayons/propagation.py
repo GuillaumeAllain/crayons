@@ -29,7 +29,11 @@ class Ray:
         return self[3:]
 
     def normalize(self, index: float = 1.0, inplace: bool = False):
-        return Ray(*self.position, *self.cosine * index / np.linalg.norm(self.cosine))
+        object.__setattr__(
+            self,
+            "vector",
+            (*self.position, *self.cosine * index / np.linalg.norm(self.cosine)),
+        )
 
 
 def find_intersection(
@@ -82,7 +86,7 @@ def refraction(ray: Ray, normal: Callable[float, float], n2: float = 1) -> Ray:
         param *= n2 / np.linalg.norm(param)
         return crossproduct - np.cross(normalsurf, param)
 
-    solve = root(equation, cosin)
+    solve = root(equation, cosin * n2 / np.linalg.norm(cosin))
     if solve.success:
         return Ray(*np.concatenate((ray[:3], solve.x * n2 / np.linalg.norm(solve.x))))
     else:

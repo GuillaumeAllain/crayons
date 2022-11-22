@@ -99,7 +99,7 @@ class System:
             key = 0
         propagation_array = []
         range_obj = (
-            range(key - 1, -1, -1) if reverse else range(key + 1, len(self.surfaces))
+            range(key - 1, 0, -1) if reverse else range(key + 1, len(self.surfaces))
         )
 
         ray = Ray(
@@ -116,10 +116,10 @@ class System:
             ray = transfert(
                 ray,
                 lambda x, y: current_surface_func["sag"](
-                    x, y, **self.surfaces[curr if reverse else curr].args
+                    x, y, **self.surfaces[curr].args
                 ),
                 lambda x, y: current_surface_func["normal"](
-                    x, y, **self.surfaces[curr if reverse else curr].args
+                    x, y, **self.surfaces[curr].args
                 ),
                 (-1 if reverse else 1)
                 * self.surfaces[curr if reverse else curr - 1].thickness,
@@ -131,12 +131,24 @@ class System:
                 lambda x, y: current_surface_func["normal"](
                     x,
                     y,
-                    **self.surfaces[curr if reverse else curr].args,
+                    **self.surfaces[curr].args,
                 ),
-                n2=self.surfaces[
-                    (curr - 1 if curr > 0 else 0) if reverse else curr
-                ].material.index(self.wavelengths),
+                n2=self.surfaces[curr - 1 if reverse else curr].material.index(
+                    self.wavelengths
+                ),
             )
+
             if not reverse:
                 propagation_array.append(ray.vector)
+        if reverse:
+            ray = transfert(
+                ray,
+                lambda x, y: current_surface_func["sag"](x, y, **self.surfaces[0].args),
+                lambda x, y: current_surface_func["normal"](
+                    x, y, **self.surfaces[0].args
+                ),
+                -1 * self.surfaces[0].thickness,
+            )
+            propagation_array.append(ray.vector)
+
         return np.array(propagation_array)[:: -1 if reverse else 1]

@@ -18,7 +18,7 @@ class TestSystem(unittest.TestCase):
 
     # TODO Slice add/remove
 
-    def test_propagate_chief(self):
+    def test_propagate_reverse1(self):
         s = System()
         s.insert(2, Surface(type="sph", args={"c": -0.25}, thickness=1.5))
         s[2].material = Material(**{"n": 1.5, "vd": 50})
@@ -33,6 +33,66 @@ class TestSystem(unittest.TestCase):
         ray2 = Ray(*s.propagate(ray1)[-1])
         self.assertTrue(
             np.all(np.isclose(s.propagate(ray1), s.propagate(ray2, 3, reverse=True)))
+        )
+
+    def test_propagate_chief2(self):
+        s = System()
+        s.insert(2, Surface(type="sph", args={"c": -0.25}, thickness=1.5))
+        s[2].material = Material(**{"n": 1.5, "vd": 50})
+        s[3].material = Material(**{"n": 1.5, "vd": 50})
+        s[0].thickness = 1.5
+        s[1].thickness = 1.5
+        s[2].thickness = 1.5
+        s[0].args = {"c": -0.25}
+        s.stop = 1
+        s.pop(1)
+        ray1 = Ray(
+            *(0.00000000, -0.266052338, 0.00000000, 0.00000000, 0.17364818, 0.98480775)
+        )
+        ray2 = Ray(*s.propagate(ray1)[-1])
+        self.assertTrue(
+            np.all(
+                np.isclose(
+                    s.propagate(ray1),
+                    s.propagate(ray2, len(s.surfaces) - 1, reverse=True),
+                )
+            )
+        )
+
+    def test_propagate_chief3(self):
+        s = System(
+            surfaces=[
+                Surface("sph", thickness=6, args={"c": 0}),
+                Surface(
+                    "sph",
+                    thickness=1,
+                    args={"c": 0.01},
+                    material=Material(n=1.5, vd=50),
+                ),
+                Surface(
+                    "sph", thickness=1, args={"c": 0}, material=Material(n=1.5, vd=50)
+                ),
+            ],
+            stop=1,
+        )
+        ray1 = Ray(
+            *(
+                0.000000000,
+                -0.524931981,
+                0.000000000,
+                0.000000000,
+                0.168382942,
+                0.985721657,
+            )
+        )
+        ray2 = Ray(*s.propagate(ray1)[-1])
+        self.assertTrue(
+            np.all(
+                np.isclose(
+                    s.propagate(ray1),
+                    s.propagate(ray2, len(s.surfaces) - 1, reverse=True),
+                )
+            ),
         )
 
     def test_propagate(self):
