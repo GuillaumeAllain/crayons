@@ -7,24 +7,48 @@ sph = surfaces.surfaces_catalog["sph"]
 
 class TestRay(unittest.TestCase):
     def test_ray_getitem(self):
-        R = Ray(0, 1, 2, 3, 4, 4)
+        R = Ray(
+            0,
+            1,
+            2,
+            3,
+            4,
+            4,
+            587.5618,
+        )
         self.assertTrue(np.all(np.equal(R[0::2], np.array([0, 2, 4]))))
 
 
 class TestSph(unittest.TestCase):
     def test_sag(self):
-        self.assertTrue(np.array_equal(sph["sag"](0, 0), 0))
-        self.assertTrue(np.array_equal(sph["sag"](1, 1), 0))
-        self.assertAlmostEqual(sph["sag"](1, 1, c=0.5), 0.5857864376269)
-        self.assertAlmostEqual(sph["sag"](1, 0.25, c=0.75), 0.48759236957565)
-        self.assertAlmostEqual(sph["sag"](0, 0.05, c=0.05), 0.62500097657e-4)
+        self.assertTrue(np.array_equal(sph["sag"](0, 0, rotation=[0, 0, 0]), 0))
+        self.assertTrue(np.array_equal(sph["sag"](1, 1, rotation=[0, 0, 0]), 0))
+        self.assertAlmostEqual(
+            sph["sag"](1, 1, c=0.5, rotation=[0, 0, 0]), 0.5857864376269
+        )
+        self.assertAlmostEqual(
+            sph["sag"](1, 0.25, c=0.75, rotation=[0, 0, 0]), 0.48759236957565
+        )
+        self.assertAlmostEqual(
+            sph["sag"](0, 0.05, c=0.05, rotation=[0, 0, 0]), 0.62500097657e-4
+        )
+
+    def test_clear_aperture(self):
+        pass
 
     def test_sag_array(self):
-        self.assertTrue(np.all(np.isclose(sph["sag"]([0, 0], [0, 0]), [0, 0])))
+        self.assertTrue(
+            np.all(np.isclose(sph["sag"]([0, 0], [0, 0], rotation=[0, 0, 0]), [0, 0]))
+        )
         self.assertTrue(
             np.all(
                 np.isclose(
-                    sph["sag"]([1, 0.75, 0, 0.25], [1, 0.75, 0.25, 1.25], c=0.75),
+                    sph["sag"](
+                        [1, 0.75, 0, 0.25],
+                        [1, 0.75, 0.25, 1.25],
+                        c=0.75,
+                        rotation=[0, 0, 0],
+                    ),
                     np.array(
                         [np.nan, 0.52538669043061, 0.02364719620819, 0.94246535334805]
                     ),
@@ -34,15 +58,24 @@ class TestSph(unittest.TestCase):
         )
 
     def test_sag_normal(self):
-        self.assertTrue(np.array_equal(sph["normal"](0, 0), [0, 0, -1]))
-        self.assertTrue(np.array_equal(sph["normal"](1, 1), [0, 0, -1]))
         self.assertTrue(
-            np.all(np.isclose(sph["normal"](0, 0.26766, c=0.5), [0, 0.13383, -0.99100]))
+            np.array_equal(sph["normal"](0, 0, rotation=[0, 0, 0]), [0, 0, -1])
+        )
+        self.assertTrue(
+            np.array_equal(sph["normal"](1, 1, rotation=[0, 0, 0]), [0, 0, -1])
         )
         self.assertTrue(
             np.all(
                 np.isclose(
-                    sph["normal"](0.38204497, 0.66486670, c=-0.25),
+                    sph["normal"](0, 0.26766, c=0.5, rotation=[0, 0, 0]),
+                    [0, 0.13383, -0.99100],
+                )
+            )
+        )
+        self.assertTrue(
+            np.all(
+                np.isclose(
+                    sph["normal"](0.38204497, 0.66486670, c=-0.25, rotation=[0, 0, 0]),
                     [-0.09551124, -0.16621668, -0.98145281],
                 )
             )
@@ -51,7 +84,10 @@ class TestSph(unittest.TestCase):
     def test_sag_normal_array(self):
         self.assertTrue(
             np.all(
-                np.isclose(sph["normal"]([0, 0], [0, 0]), [[0, 0], [0, 0], [-1, -1]])
+                np.isclose(
+                    sph["normal"]([0, 0], [0, 0], rotation=[0, 0, 0]),
+                    np.array([[0, 0], [0, 0], [-1, -1]]),
+                )
             )
         )
         self.assertTrue(
@@ -61,6 +97,7 @@ class TestSph(unittest.TestCase):
                         [0, 0.64960168, 0.20212522],
                         [0, 0.64960168, 0.67064166],
                         c=-0.25,
+                        rotation=[0, 0, 0],
                     ),
                     np.array(
                         [

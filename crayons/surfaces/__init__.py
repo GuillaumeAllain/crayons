@@ -1,3 +1,3 @@
-from .bank import surfaces_catalog
+from .catalog import surfaces_catalog
 
-del bank
+del catalog

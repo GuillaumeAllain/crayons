@@ -3,12 +3,23 @@ from collections.abc import Iterable
 from functools import cache
 import numpy as np
 from os import linesep
+from pathlib import Path
+import glob
+
+from ..util import parse_agf, parse_xml
+
+glass_catalog = {}
+file_catalog_list = glob.glob(f"{Path(__file__).parent}/../catalogs/*.xml")
+catalog_name = [Path(file).stem for file in file_catalog_list]
+for file, name in zip(file_catalog_list, catalog_name):
+    glass_catalog[name] = parse_xml(file)
 
 
 @dataclass(frozen=True, eq=True)
 class Material:
-    name: str = field(default=None)
     code: str = field(default=None)
+    name: str = field(default=None)
+    catalog: str = field(default=None)
     B: tuple = field(default=None)
     C: tuple = field(default=None)
     n: float = field(default=None)
@@ -21,10 +32,30 @@ class Material:
         if not self.name and self.code:
             object.__setattr__(self, "name", self.code)
         if self.name is not None and self.code is None:
-            if self.name == "air":
+            if self.name.upper() == "AIR":
                 object.__setattr__(self, "n", 1.0)
+            elif self.catalog:
+                try:
+                    object.__setattr__(
+                        self, "B", glass_catalog[self.catalog][self.name]["B"]
+                    )
+                    object.__setattr__(
+                        self, "C", glass_catalog[self.catalog][self.name]["C"]
+                    )
+                except KeyError:
+                    try:
+                        object.__setattr__(
+                            self, "n", glass_catalog[self.catalog][self.name]["n"]
+                        )
+                        object.__setattr__(
+                            self, "vd", glass_catalog[self.catalog][self.name]["vd"]
+                        )
+                    except KeyError:
+                        raise KeyError(
+                            f"Could not find {self.name} in {self.catalog} catalog"
+                        )
             else:
-                raise NotImplementedError("Material code lookup is not implemented")
+                raise NotImplementedError("Could not find glass or missing catalog")
         if ((not self.n) and (not self.vd)) and not (self.B and self.C):
             n, vd = self.code.split(":")
             n, vd = float("1." + n), float(vd[:2] + "." + vd[2:])
