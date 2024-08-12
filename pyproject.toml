@@ -4,7 +4,14 @@ version = "0.1.0"
 description = "Add a short description here"
 authors = [{name = "Guillaume Allain", email = "13963457+GuillaumeAllain@users.noreply.github.com"}]
 requires-python = ">= 3.11"
-dependencies = ["numpy", "scipy", "tabulate", "matplotlib", "pyparsing"]
+dependencies = ["numpy>=1.26.4,<2", "scipy>=1.14.0,<2", "matplotlib>=3.9.1,<4", "pyparsing>=3.1.2,<4", "tabulate>=0.9.0,<1"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pixi.environments]
+default = {features = [], solve-group = "default"}
+test = {features = ["test"], solve-group = "default"}
 
 [build-system]
 requires = ["setuptools"]
@@ -24,3 +31,5 @@ numpy = ">=1.26.4,<2"
 scipy = ">=1.14.0,<2"
 matplotlib = ">=3.9.1,<4"
 pyparsing = ">=3.1.2,<4"
+tabulate = ">=0.9.0,<0.10"
+
