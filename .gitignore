@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 *.DS_Store
+# pixi environments
+.pixi
+*.egg-info
