@@ -44,7 +44,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-base-3.9.1-py312h32d6e5a_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/munkres-1.1.4-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/ncurses-6.5-hb89a1cb_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/numpy-1.26.4-py312h8442bc7_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/numpy-2.0.1-py312hb544834_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/openjpeg-2.5.2-h9f1df11_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/openssl-3.3.1-hfb2fe0b_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/packaging-24.1-pyhd8ed1ab_0.conda
@@ -111,7 +111,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-base-3.9.1-py312h32d6e5a_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/munkres-1.1.4-pyh9f0ad1d_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/ncurses-6.5-hb89a1cb_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/numpy-1.26.4-py312h8442bc7_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/numpy-2.0.1-py312hb544834_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/openjpeg-2.5.2-h9f1df11_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/openssl-3.3.1-hfb2fe0b_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/packaging-24.1-pyhd8ed1ab_0.conda
@@ -241,9 +241,9 @@ packages:
   name: crayons
   version: 0.1.0
   path: .
-  sha256: 534a97f497cd418d7f90bc92b5f11afa22c3d6e498dcd64e5cde9e231991f067
+  sha256: 371955d2ddb1f83ddd14fda70670851504f8217bfeb113b6a10072479e54ff2d
   requires_dist:
-  - numpy>=1.26.4,<2
+  - numpy
   - scipy>=1.14.0,<2
   - matplotlib>=3.9.1,<4
   - pyparsing>=3.1.2,<4
@@ -804,13 +804,14 @@ packages:
   timestamp: 1715194898402
 - kind: conda
   name: numpy
-  version: 1.26.4
-  build: py312h8442bc7_0
+  version: 2.0.1
+  build: py312hb544834_0
   subdir: osx-arm64
-  url: https://conda.anaconda.org/conda-forge/osx-arm64/numpy-1.26.4-py312h8442bc7_0.conda
-  sha256: c8841d6d6f61fd70ca80682efbab6bdb8606dc77c68d8acabfbd7c222054f518
-  md5: d83fc83d589e2625a3451c9a7e21047c
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/numpy-2.0.1-py312hb544834_0.conda
+  sha256: 943ede4dc872c8f8b7d92a71b843b445f46ebf084047f5816554646d763aa50d
+  md5: c386f6ee0329c18d652e30b9722c6660
   depends:
+  - __osx >=11.0
   - libblas >=3.9.0,<4.0a0
   - libcblas >=3.9.0,<4.0a0
   - libcxx >=16
@@ -823,9 +824,9 @@ packages:
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/numpy?source=hash-mapping
-  size: 6073136
-  timestamp: 1707226249608
+  - pkg:pypi/numpy?source=compressed-mapping
+  size: 6294877
+  timestamp: 1721966342039
 - kind: conda
   name: openjpeg
   version: 2.5.2
